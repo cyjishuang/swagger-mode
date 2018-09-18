@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+}
+
+group 'com.yueh'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    def springVersion = "4.3.12.RELEASE"
+
+    // Spring依赖
+    compile("org.springframework:spring-aop:$springVersion",
+            "org.springframework:spring-orm:$springVersion",
+            "org.springframework:spring-jdbc:$springVersion",
+            "org.springframework:spring-instrument-tomcat:$springVersion",
+            "org.springframework:spring-instrument:$springVersion",
+            "org.springframework:spring-framework-bom:$springVersion",
+            "org.springframework:spring-expression:$springVersion",
+            "org.springframework:spring-core:$springVersion",
+            "org.springframework:spring-context-support:$springVersion",
+            "org.springframework:spring-context:$springVersion",
+            "org.springframework:spring-beans:$springVersion",
+            "org.springframework:spring-aspects:$springVersion",
+            "org.springframework:spring-test:$springVersion",
+            "org.springframework:spring-tx:$springVersion",
+            "org.springframework:spring-web:$springVersion",
+            "org.springframework:spring-webmvc:$springVersion",
+            "org.springframework:spring-webmvc-portlet:$springVersion")
+
+
+    compile group: 'com.google.guava' ,name: 'guava', version: '14.0'
+
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
+
+    compile group: 'io.springfox' ,name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox' ,name: 'springfox-swagger-ui', version: '2.9.2'
+}
