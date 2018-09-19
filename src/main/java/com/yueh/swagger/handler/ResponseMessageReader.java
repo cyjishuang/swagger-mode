@@ -110,7 +110,6 @@ public class ResponseMessageReader extends SwaggerResponseMessageReader {
                     context.getIgnorableParameterTypes());
             ResolvedType resolvedType = context.alternateFor(operationResponse.get());
 
-//            ModelReference responseModel = new ModelRef("searchUsers");
             ModelReference responseModel = modelRefFactory(modelContext, typeNameExtractor).apply(resolvedType);
             context.operationBuilder().responseModel(responseModel);
             ResponseMessage defaultMessage = new ResponseMessageBuilder()
