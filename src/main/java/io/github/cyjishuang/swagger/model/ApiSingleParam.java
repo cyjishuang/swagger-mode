@@ -1,4 +1,4 @@
-package com.yueh.swagger.model;
+package io.github.cyjishuang.swagger.model;
 
 /**
  * Created by yueh on 2018/9/7.

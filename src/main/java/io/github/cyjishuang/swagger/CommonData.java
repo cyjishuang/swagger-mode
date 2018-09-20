@@ -1,11 +1,13 @@
-package com.yueh.swagger;
+package io.github.cyjishuang.swagger;
 
 /**
  * Created by yueh on 2018/9/18.
  */
 public class CommonData {
 
+
     private static  String RESULT_TYPE_NORMAL = "normal";
+
     private static  String RESULT_TYPE_PAGE = "page";
     private static  String RESULT_TYPE_LIST = "list";
     private static  String RESULT_TYPE_OTHER = "other";
@@ -20,6 +22,8 @@ public class CommonData {
     private static  String JSON_PAGE_COUNT = "pageCount";
 
     private static  String JSON_TOTAL_COUNT = "totalCount";
+
+    public static final String RESULT_TYPE_NORMAL_FINAL = "normal";
 
     public static String getResultTypeNormal() {
         return RESULT_TYPE_NORMAL;

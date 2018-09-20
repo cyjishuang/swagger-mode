@@ -1,4 +1,4 @@
-package com.yueh.swagger.handler;
+package io.github.cyjishuang.swagger.handler;
 
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.TypeResolver;

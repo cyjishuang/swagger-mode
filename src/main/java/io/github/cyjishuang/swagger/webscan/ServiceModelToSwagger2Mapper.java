@@ -1,4 +1,4 @@
-package com.yueh.swagger.webscan;
+package io.github.cyjishuang.swagger.webscan;
 
 import com.google.common.collect.Multimap;
 import io.swagger.models.Contact;

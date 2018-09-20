@@ -1,4 +1,4 @@
-package com.yueh.swagger.handler;
+package io.github.cyjishuang.swagger.handler;
 
 /**
  * Created by yueh on 2018/9/12.
@@ -11,7 +11,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-import com.yueh.swagger.ModelCache;
+import io.github.cyjishuang.swagger.ModelCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.AnnotationUtils;

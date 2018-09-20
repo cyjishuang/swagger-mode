@@ -1,12 +1,12 @@
-package com.yueh.swagger;
+package io.github.cyjishuang.swagger;
 
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Function;
-import com.yueh.swagger.model.ApiJsonObject;
-import com.yueh.swagger.model.ApiJsonProperty;
-import com.yueh.swagger.model.ApiJsonResult;
-import com.yueh.swagger.model.ApiSingleParam;
+import io.github.cyjishuang.swagger.model.ApiJsonObject;
+import io.github.cyjishuang.swagger.model.ApiJsonProperty;
+import io.github.cyjishuang.swagger.model.ApiJsonResult;
+import io.github.cyjishuang.swagger.model.ApiSingleParam;
 import org.springframework.plugin.core.OrderAwarePluginRegistry;
 import org.springframework.plugin.core.PluginRegistry;
 import springfox.documentation.schema.*;
@@ -20,7 +20,7 @@ import java.util.*;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.yueh.swagger.CommonData.*;
+import static io.github.cyjishuang.swagger.CommonData.*;
 import static org.springframework.util.ObjectUtils.isEmpty;
 import static springfox.documentation.schema.Collections.collectionElementType;
 import static springfox.documentation.spi.schema.contexts.ModelContext.inputParam;
@@ -35,6 +35,7 @@ public class ModelCache {
     private Function<ResolvedType, ? extends ModelReference> factory;
     private TypeResolver typeResolver = new TypeResolver();
     private Map<String, ApiSingleParam> paramMap = new HashMap<>();
+    private Class<?> cls;
 
 
     private ModelCache() {
@@ -48,6 +49,15 @@ public class ModelCache {
     public ModelCache setParamMap(Map<String, ApiSingleParam> paramMap) {
         this.paramMap = paramMap;
         return getInstance();
+    }
+
+    public ModelCache setParamClass(Class<?> cls) {
+        this.cls = cls;
+        return getInstance();
+    }
+
+    public Class<?> getParamClass() {
+        return cls;
     }
 
 
@@ -70,13 +80,13 @@ public class ModelCache {
 
 
     public ModelCache addModel(ApiJsonObject jsonObj) {
-        String modelName =jsonObj.name();
+        String modelName = jsonObj.name();
 
         knownModels.put(modelName,
                 new Model(modelName,
                         modelName,
                         new TypeResolver().resolve(String.class),
-                        "xin.bee.model.entity.BusinessUser",
+                        "io.github.cyjishuang.CommonData",
                         toPropertyMap(jsonObj.value()),
                         "POST参数",
                         "",
@@ -89,7 +99,7 @@ public class ModelCache {
                 new Model(resultName,
                         resultName,
                         new TypeResolver().resolve(String.class),
-                        "xin.bee.model.entity.BusinessUser",
+                        "io.github.cyjishuang.CommonData",
                         toResultMap(jsonObj.result(), resultName),
                         "返回模型",
                         "",
@@ -100,7 +110,7 @@ public class ModelCache {
     }
 
     public Map<String, ModelProperty> toResultMap(ApiJsonResult jsonResult, String groupName) {
-
+//        System.out.println("--- toResultMap ---");
         List<String> values = Arrays.asList(jsonResult.value());
         List<String> outer = new ArrayList<>();
 
@@ -114,7 +124,7 @@ public class ModelCache {
                         new Model(subModelName,
                                 subModelName,
                                 new TypeResolver().resolve(String.class),
-                                "xin.bee.model.entity.BusinessUser",
+                                "io.github.cyjishuang.CommonData",
                                 transResultMap(values),
                                 "返回模型",
                                 "",
@@ -149,12 +159,10 @@ public class ModelCache {
                 try {
                     Field f = ModelProperty.class.getDeclaredField("modelRef");
                     f.setAccessible(true);
-                    f.set(mp, new ModelRef("List",new ModelRef(subModelName)));
+                    f.set(mp, new ModelRef("List", new ModelRef(subModelName)));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println("0000000000");
-                System.out.println(mp.getModelRef().getType());
                 propertyMap.put(jsonResult.name(), mp);
 
                 if (getResultTypePage().equals(jsonResult.type())) {
@@ -224,6 +232,7 @@ public class ModelCache {
     }
 
     public Map<String, ModelProperty> toPropertyMap(ApiJsonProperty[] jsonProp) {
+//        System.out.println("--- toPropertyMap ---");
         Map<String, ModelProperty> propertyMap = new HashMap<String, ModelProperty>();
 
         for (ApiJsonProperty property : jsonProp) {
@@ -255,7 +264,8 @@ public class ModelCache {
             } else {
                 resolvedType = new TypeResolver().resolve(type);
             }
-
+//            System.out.println("----- example: " + example);
+//            System.out.println("----- description: " + description);
             ModelProperty mp = new ModelProperty(
                     propertyName,
                     resolvedType,

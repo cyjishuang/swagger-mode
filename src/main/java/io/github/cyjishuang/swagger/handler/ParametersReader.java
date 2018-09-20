@@ -1,13 +1,13 @@
-package com.yueh.swagger.handler;
+package io.github.cyjishuang.swagger.handler;
 
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import com.yueh.swagger.ModelCache;
-import com.yueh.swagger.model.ApiJsonObject;
-import com.yueh.swagger.model.ApiSingleParam;
+import io.github.cyjishuang.swagger.ModelCache;
+import io.github.cyjishuang.swagger.model.ApiJsonObject;
+import io.github.cyjishuang.swagger.model.ApiSingleParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,6 +25,7 @@ import springfox.documentation.spi.service.contexts.OperationContext;
 import springfox.documentation.spi.service.contexts.ParameterContext;
 import springfox.documentation.spring.web.DescriptionResolver;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,18 +67,18 @@ public class ParametersReader implements OperationBuilderPlugin {
         List<ResolvedMethodParameter> methodParameters = context.getParameters();
 
         Map<String, ApiSingleParam> paramMap = new HashMap<>();
-//        Field[] fields = GlobalString.class.getDeclaredFields();
-//        String type = new String();
-//        for (Field field : fields) {
-//            if (field.isAnnotationPresent(ApiSingleParam.class)) {
-//                ApiSingleParam param = field.getAnnotation(ApiSingleParam.class);
-//                try {
-//                    String name = (String) field.get(type);
-//                    paramMap.put(name, param);
-//                } catch (Exception e) {
-//                }
-//            }
-//        }
+        Field[] fields = ModelCache.getInstance().getParamClass().getDeclaredFields();
+        String type = new String();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(ApiSingleParam.class)) {
+                ApiSingleParam param = field.getAnnotation(ApiSingleParam.class);
+                try {
+                    String name = (String) field.get(type);
+                    paramMap.put(name, param);
+                } catch (Exception e) {
+                }
+            }
+        }
 
 
         for (ResolvedMethodParameter methodParameter : methodParameters) {
