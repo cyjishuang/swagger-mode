@@ -316,5 +316,70 @@ ModelProperty的制作
 map的话比较简单，参考这篇
 https://blog.csdn.net/hellopeng1/article/details/82227942
 
-git和jar稍后发上来
+
+git:https://github.com/cyjishuang/swagger-mode
+
+jar:
+build.gradle:
+```
+allprojects {
+    repositories {
+        //maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven{ url "https://oss.sonatype.org/content/groups/staging"}
+        //mavenCentral()
+    }
+}
+dependencies {
+    compile  group: 'io.github.cyjishuang' ,name: 'swagger-mode', version: '1.0'
+}
+```
+spring-context.xml 添加扫描
+```
+	<context:component-scan base-package="io.github.cyjishuang"/>
+```
+在创建文档的时候设置存放参数的类ModelCache.getInstance().setParamClass(XXX.class);
+```
+ public Docket createRestApi() {
+        ModelCache.getInstance().setParamClass(GlobalString.class);
+        return new Docket(DocumentationType.SWAGGER_2)...
+```
+
+这样配置就完成了，后面只需要对Controller和参数的类添加说明即可，示例
+```
+@RequestMapping(value = "/api/v1/manager")
+@RestController
+@Api(description = "管理员身份接口")
+public class ManagerController {
+   @ApiOperation(value = "管理员-预判是否存在",notes ="预判管理员是否存在" )
+    @ApiJsonObject(name = "manager-checkManager", value = {
+            @ApiJsonProperty(name = JSON_USER_NAME),
+            @ApiJsonProperty(name = JSON_USER_EMAIL)},
+            result = @ApiJsonResult({}))
+    @ApiImplicitParam(name = "params", required = true, dataType = "manager-checkManager")
+    @ApiResponses({@ApiResponse(code = 200, message = "OK", reference = "manager-checkManager")})
+
+    @RequestMapping(value = "/checkManager", method = RequestMethod.POST, consumes = MSG_FORMAT_JSON_UTF8, produces = MSG_FORMAT_JSON_UTF8)
+    public String checkManager(@RequestBody String params) {
+        return new ControllerCallBack()
+                .addCommonService(managerService::checkUser)
+                .build(params);
+    }
+}
+```
+
+```
+public class GlobalString {
+    @ApiSingleParam(value = "用户姓名", example = "test1")
+    public static final String JSON_USER_NAME = "userName";
+
+    @ApiSingleParam(value = "用户邮箱", example = "17721026877@qq.com")
+    public static final String JSON_USER_EMAIL = "userEmail";
+
+    @ApiSingleParam(value = "错误码", example = "0", type = Integer.class)
+    public static final String JSON_ERROR_CODE = "errorCode";
+
+    @ApiSingleParam(value = "错误信息", example = "OK")
+    public static final String JSON_ERROR_MSG = "errorMsg";
+}
+```
 
