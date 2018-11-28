@@ -1,15 +1,83 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 group 'io.github.cyjishuang'
-version '1.0-SNAPSHOT'
+version '1.5-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
 repositories {
     maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
     mavenCentral()
+}
+
+uploadArchives {
+    repositories {
+
+        mavenDeployer {
+            //为Pom文件做数字签名
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            //指定项目部署到的中央库地址，UserName和Password就是Part 1中注册的账号。
+            repository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: 'chyue', password: 'Cy19921107&&')
+            }
+            //构造项目的Pom文件，参见Part 2中Pom文件的规范，不要遗漏必填项
+            pom.project {
+                name project.name
+                packaging 'jar'
+                description 'swagger json request&response'
+                url 'https://github.com/cyjishuang'
+
+                scm {
+                    url 'https://github.com/cyjishuang/swagger-mode.git'
+                    connection 'scm:git@github.com/cyjishuang/swagger-mode.git'
+                    developerConnection 'scm:git@github.com/cyjishuang/swagger-mode.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'cyjishuang'
+                        name 'Yueh Chen'
+                    }
+                }
+            }
+        }
+    }
+}
+
+//参见Part 2， 为项目生成**.jar/**-javadoc.jar/**-sources.jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+
+
+//为所有的jar包做数字签名
+signing {
+    sign configurations.archives
 }
 
 dependencies {
@@ -43,4 +111,5 @@ dependencies {
 
     compile group: 'io.springfox' ,name: 'springfox-swagger2', version: '2.9.2'
     compile group: 'io.springfox' ,name: 'springfox-swagger-ui', version: '2.9.2'
+
 }

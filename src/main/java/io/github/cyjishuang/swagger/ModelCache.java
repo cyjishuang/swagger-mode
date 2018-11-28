@@ -274,7 +274,7 @@ public class ModelCache {
                     property.required(),
                     false,
                     property.readOnly(),
-                    property.allowEmptyValue(),
+                    null,
                     description,
                     null,
                     example,

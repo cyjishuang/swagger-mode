@@ -42,8 +42,6 @@ public @interface ApiJsonProperty {
 
     String format() default "";
 
-    boolean allowEmptyValue() default false;
-
     boolean readOnly() default false;
 
     String collectionFormat() default "";
