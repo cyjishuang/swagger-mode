@@ -243,7 +243,7 @@ public class ModelCache {
             if (isNullOrEmpty(description) && !isEmpty(param)) {
                 description = param.value();
             }
-            String example = property.description();
+            String example = property.example();
             if (isNullOrEmpty(example) && !isEmpty(param)) {
                 example = param.example();
             }
